@@ -1,11 +1,6 @@
-import { Typography } from "@mui/material";
 
 function ClientePage(){
-    return(
-        <Typography>
-            h1. Heading
-        </Typography>
-    );
+    return(<>Página do Cliente</>);
 }
 
 export default ClientePage;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 function FornecedorPage(){
-    return(<h1>Página do Fornecedor</h1>);
+    return(<>Página do Fornecedor</>);
 }
 
 export default FornecedorPage;

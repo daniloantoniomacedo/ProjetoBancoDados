@@ -2,6 +2,7 @@ package br.ucsal.loja.model;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,23 +12,26 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "produto")
+@Table(name = "PRODUTO")
 public class Produto {
-	
+
 	@Id
-	@Column(name = "id")
+	@Column(name = "COD_PRODUTO")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private BigInteger id;
 	
-	@Column(name = "nome")
+	@Column(name = "NOME")
 	private String nome;
 	
-	@Column(name = "preco")
+	@Column(name = "PRECO")
 	private BigDecimal preco;
 	
-	@Column(name = "descricao")
+	@Column(name = "DESCRICAO")
 	private String descicao;
-
+	
+	@Column(name = "DATA_CADASTRO")
+	private Timestamp dataCadastro;
+	
 	public BigInteger getId() {
 		return id;
 	}
@@ -58,6 +62,14 @@ public class Produto {
 
 	public void setDescicao(String descicao) {
 		this.descicao = descicao;
+	}
+
+	public Timestamp getDataCadastro() {
+		return dataCadastro;
+	}
+
+	public void setDataCadastro(Timestamp dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
 	
 }

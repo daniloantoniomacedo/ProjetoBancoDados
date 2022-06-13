@@ -30,7 +30,7 @@ public class ProdutoDAO {
 		
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT SUM(PR_FO.ESTOQUE) estoque, ");
-		sql.append("nome, preco, descricao, DATA_CADASTRO cadastro ");
+		sql.append("nome, preco, descricao, DATA_CADASTRO cadastro, PR.COD_PRODUTO id ");
 		sql.append("FROM PRODUTO_FORNECEDOR PR_FO ");
 		sql.append("INNER JOIN PRODUTO PR ON PR.COD_PRODUTO = PR_FO.COD_PRODUTO ");
 		sql.append("WHERE 1=1 ");

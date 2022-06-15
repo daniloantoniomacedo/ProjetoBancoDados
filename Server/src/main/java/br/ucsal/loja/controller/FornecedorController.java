@@ -5,12 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ucsal.loja.exception.BusinessException;
 import br.ucsal.loja.service.FornecedorService;
+import br.ucsal.loja.to.CadastraFornecedorRquest;
 import br.ucsal.loja.util.Constantes;
 
 @RestController
@@ -29,6 +32,7 @@ public class FornecedorController {
 		} catch (BusinessException e) {
 			response = new ResponseEntity<Object>(e.getMessage(), e.getStatus());
 		} catch (RuntimeException e) {
+			e.printStackTrace();
 			response = new ResponseEntity<Object>(Constantes.MSG_SERVER_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return response;
@@ -43,6 +47,23 @@ public class FornecedorController {
 		} catch (BusinessException e) {
 			response = new ResponseEntity<Object>(e.getMessage(), e.getStatus());
 		} catch (RuntimeException e) {
+			response = new ResponseEntity<Object>(Constantes.MSG_SERVER_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return response;
+	}
+	
+	@PostMapping(value = "/cadastrar",
+			 produces = MediaType.APPLICATION_JSON_VALUE,
+			 consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> cadastrarProduto(@RequestBody CadastraFornecedorRquest request){
+	ResponseEntity<Object> response;
+		try {
+			fornecedorService.cadastrarFornecedor(request);
+			response = ResponseEntity.ok("Produto cadastrado com sucesso!");
+		} catch (BusinessException e) {
+			response = new ResponseEntity<Object>(e.getMessage(), e.getStatus());
+		} catch (RuntimeException e) {
+			e.printStackTrace();
 			response = new ResponseEntity<Object>(Constantes.MSG_SERVER_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return response;

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ucsal.loja.exception.BusinessException;
@@ -65,6 +66,36 @@ public class ProdutoController {
 		} catch (BusinessException e) {
 			response = new ResponseEntity<Object>(e.getMessage(), e.getStatus());
 		} catch (RuntimeException e) {
+			response = new ResponseEntity<Object>(Constantes.MSG_SERVER_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return response;
+	}
+	
+	@GetMapping(value = "/obter/vendidos", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> obterProdutosVendidos(){ 
+		ResponseEntity<Object> response;
+		try {
+			response = ResponseEntity.ok(produtoService.obterProdutosVendidos());
+		} catch (BusinessException e) {
+			response = new ResponseEntity<Object>(e.getMessage(), e.getStatus());
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			response = new ResponseEntity<Object>(Constantes.MSG_SERVER_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return response;
+	}
+	
+	@GetMapping(value = "/obter/vendidosPorCpfCnpj", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> obterProdutosVendidosPorCpfCnpj(@RequestParam String cpfCnpj){ 
+		ResponseEntity<Object> response;
+		try {
+			response = ResponseEntity.ok(produtoService.obterProdutosVendidosPeloCpfCnpjCliente(cpfCnpj));
+		} catch (BusinessException e) {
+			response = new ResponseEntity<Object>(e.getMessage(), e.getStatus());
+		} catch (RuntimeException e) {
+			e.printStackTrace();
 			response = new ResponseEntity<Object>(Constantes.MSG_SERVER_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return response;

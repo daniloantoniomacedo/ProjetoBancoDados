@@ -67,5 +67,13 @@ public class ProdutoService {
 			produtoDAO.relacionarProdutoFornecedor(idProduto, fornecedor);
 		}
 	}
+	
+	public List<ConsultaProdutoResponse> obterProdutosVendidos() throws BusinessException{
+		return produtoDAO.obterProdutosVendidos();
+	}
+	
+	public List<ConsultaProdutoResponse> obterProdutosVendidosPeloCpfCnpjCliente(String cpfCnpj) throws BusinessException {
+		return produtoDAO.obterProdutosVendidosPeloCpfCnpjCliente(cpfCnpj);
+	}
 
 }

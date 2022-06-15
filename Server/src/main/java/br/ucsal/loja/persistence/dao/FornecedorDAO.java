@@ -10,8 +10,10 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.ucsal.loja.exception.BusinessException;
+import br.ucsal.loja.to.CadastraFornecedorRquest;
 import br.ucsal.loja.to.FornecedorTO;
 
 @Component
@@ -45,30 +47,33 @@ public class FornecedorDAO {
 		
 	}
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	public List<FornecedorTO> obterFornecedores(String nome) throws BusinessException{
 		
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT FO.nome, FO.cnpj, FO.email, FO.telefone ");
+		sql.append("SELECT nome, cnpj, email, telefone ");
 		sql.append("FROM FORNECEDOR WHERE 1=1 ");
 		if(Objects.nonNull(nome) && !nome.isEmpty()) {
-			sql.append("AND FO.nome LIKE ?1");
+			sql.append("AND UPPER(nome) LIKE ?1");
 		}
 		
 		List<FornecedorTO> retorno = null;
 		
 		if(Objects.nonNull(nome) && !nome.isEmpty()) {
-			entityManager.createNativeQuery(sql.toString())
-			  			 .unwrap(NativeQuery.class)
-			  			 .setResultTransformer(Transformers.aliasToBean(FornecedorTO.class))
-			  			 .getResultList();
+			
+			retorno = entityManager.createNativeQuery(sql.toString())
+								   .setParameter(1, "%" + nome.toUpperCase().trim() + "%")
+								   .unwrap(NativeQuery.class)
+								   .setResultTransformer(Transformers.aliasToBean(FornecedorTO.class))
+								   .getResultList();
 			
 		} else {
-			entityManager.createNativeQuery(sql.toString())
-						 .setParameter(1, "%" + nome.trim() + "%")
-						 .unwrap(NativeQuery.class)
-						 .setResultTransformer(Transformers.aliasToBean(FornecedorTO.class))
-						 .getResultList();
+			
+			retorno = entityManager.createNativeQuery(sql.toString())
+						 		   .unwrap(NativeQuery.class)
+						 		   .setResultTransformer(Transformers.aliasToBean(FornecedorTO.class))
+						 		   .getResultList();
+			
 		}
 		
 		if(Objects.nonNull(retorno) && !retorno.isEmpty()) {
@@ -76,6 +81,22 @@ public class FornecedorDAO {
 		}
 
 		throw new BusinessException("Fornecedor não encontrado!", HttpStatus.NOT_FOUND);
+	}
+	
+	@Transactional
+	@SuppressWarnings("deprecation")
+	public void cadastrarFornecedor(CadastraFornecedorRquest request) {
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO FORNECEDOR (NOME, CNPJ, EMAIL, TELEFONE) ");
+		sql.append("VALUES (?1, ?2, ?3, ?4)");
+		
+		entityManager.createNativeQuery(sql.toString())
+		  			 .setParameter(1, request.getNome())
+		  			 .setParameter(2, request.getCnpj())
+		  			 .setParameter(3, request.getEmail())
+		  			 .setParameter(4, request.getTelefone())
+		  			 .executeUpdate();
 	}
 	
 }
